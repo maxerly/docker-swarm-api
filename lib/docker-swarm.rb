@@ -20,116 +20,13 @@ Excon.defaults[:middlewares] << Excon::Middleware::RedirectFollower
 # configuration variables that are used as defaults in other classes.
 module Docker
   module Swarm
-    attr_accessor :creds, :logger
+    include Docker
 
-    require_relative './docker/swarm/node'
-    require_relative './docker/swarm/service'
-    require_relative './docker/swarm/swarm'
-    require_relative './docker/swarm/connection'
-    require_relative './docker/swarm/network'
-    require_relative './docker/swarm/task'
-
-    def default_socket_url
-      'unix:///var/run/docker.sock'
-    end
-
-    def env_url
-      ENV['DOCKER_URL'] || ENV['DOCKER_HOST']
-    end
-
-    def env_options
-      if cert_path = ENV['DOCKER_CERT_PATH']
-        {
-          client_cert: File.join(cert_path, 'cert.pem'),
-          client_key: File.join(cert_path, 'key.pem'),
-          ssl_ca_file: File.join(cert_path, 'ca.pem'),
-          scheme: 'https'
-        }.merge(ssl_options)
-      else
-        {}
-      end
-    end
-
-    def ssl_options
-      if ENV['DOCKER_SSL_VERIFY'] == 'false'
-        {
-          ssl_verify_peer: false
-        }
-      else
-        {}
-      end
-    end
-
-    def url
-      @url ||= env_url || default_socket_url
-      # docker uses a default notation tcp:// which means tcp://localhost:2375
-      if @url == 'tcp://'
-        @url = 'tcp://localhost:2375'
-      end
-      @url
-    end
-
-    def options
-      @options ||= env_options
-    end
-
-    def url=(new_url)
-      @url = new_url
-      reset_connection!
-    end
-
-    def options=(new_options)
-      @options = env_options.merge(new_options || {})
-      reset_connection!
-    end
-
-    def connection
-      @connection ||= Connection.new(url, options)
-    end
-
-    def reset!
-      @url = nil
-      @options = nil
-      reset_connection!
-    end
-
-    def reset_connection!
-      @connection = nil
-    end
-
-    # Get the version of Go, Docker, and optionally the Git commit.
-    def version(connection = self.connection)
-      Util.parse_json(connection.get('/version'))
-    end
-
-    # Get more information about the Docker server.
-    def info(connection = self.connection)
-      Util.parse_json(connection.get('/info'))
-    end
-
-    # Ping the Docker server.
-    def ping(connection = self.connection)
-      connection.get('/_ping')
-    end
-
-    # Login to the Docker registry.
-    def authenticate!(options = {}, connection = self.connection)
-      creds = options.to_json
-      connection.post('/auth', {}, :body => creds)
-      @creds = creds
-      true
-    rescue Docker::Error::ServerError, Docker::Error::UnauthorizedError
-      raise Docker::Error::AuthenticationError
-    end
-
-    # When the correct version of Docker is installed, returns true. Otherwise,
-    # raises a VersionError.
-    def validate_version!
-      Docker.info
-      true
-    rescue Docker::Error::DockerError
-      raise Docker::Error::VersionError, "Expected API Version: #{API_VERSION}"
-    end
+    require 'docker/swarm/node'
+    require 'docker/swarm/service'
+    require 'docker/swarm/swarm'
+    require 'docker/swarm/connection'
+    require 'docker/swarm/task'
 
     module_function :default_socket_url, :env_url, :url, :url=, :env_options,
                     :options, :options=, :creds, :creds=, :logger, :logger=,
