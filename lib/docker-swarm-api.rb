@@ -1,1 +1,1 @@
-require_relative './docker-swarm'
+require 'docker-swarm'
