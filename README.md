@@ -101,3 +101,21 @@ swarm.leave(worker_node, node)
 swarm.leave(manager_node, true)
 
 ```
+
+Development using OSX
+---------------------
+
+Unfortunately, when attempting to run tests on OSX, the following error may occur:
+
+```
+% bundle exec rspec
+    Sorry, you can't use byebug without Readline. To solve this, you need to
+    rebuild Ruby with Readline support. If using Ubuntu, try `sudo apt-get
+    install libreadline-dev` and then reinstall your Ruby.
+```
+
+To work around this, use the following command:
+
+```
+ln -s /usr/local/opt/readline/lib/libreadline.dylib /usr/local/opt/readline/lib/libreadline.7.dylib
+```
