@@ -26,4 +26,5 @@ Gem::Specification.new do |gem|
   gem.add_development_dependency 'pry', '~> 0.10.4'
   gem.add_development_dependency 'single_cov', '~> 0.5.8'
   gem.add_development_dependency 'parallel', '~> 1.10'
+  gem.add_development_dependency 'cane', '~> 3.0.0'
 end
