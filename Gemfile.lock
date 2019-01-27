@@ -16,6 +16,8 @@ GEM
       minitest (~> 5.1)
       tzinfo (~> 1.1)
     byebug (6.0.2)
+    cane (3.0.0)
+      parallel
     coderay (1.1.1)
     concurrent-ruby (1.0.5)
     diff-lcs (1.2.5)
@@ -61,6 +63,7 @@ PLATFORMS
 
 DEPENDENCIES
   byebug (~> 6.0)
+  cane (~> 3.0.0)
   docker-swarm-sdk!
   parallel (~> 1.10)
   pry (~> 0.10.4)
@@ -70,4 +73,4 @@ DEPENDENCIES
   single_cov (~> 0.5.8)
 
 BUNDLED WITH
-   1.14.6
+   1.17.1
