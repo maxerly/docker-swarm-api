@@ -28,6 +28,12 @@ class Docker::Swarm::Node
   def connection
     if (@swarm) && (@swarm.node_hash[id()])
       return @swarm.node_hash[id()][:connection]
+    elsif self.class.respond_to? :auto_create_connection
+      new_connection = self.class.auto_create_connection( self )
+      if (@swarm) && (@swarm.node_hash[id()])
+        @swarm.node_hash[id()][:connection] = new_connection
+      end
+      return new_connection
     else
       return nil
     end
