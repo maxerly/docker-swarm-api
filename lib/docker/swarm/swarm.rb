@@ -149,7 +149,7 @@ class Docker::Swarm::Swarm
     end
   end
 
-  def create_network_overlay(network_name)
+  def create_network_overlay(network_name,attachable=false)
     subnet_16_parts = [10, 10, 0, 0]
     max_vxlanid = 200
 
@@ -208,6 +208,7 @@ class Docker::Swarm::Swarm
            }
         },
         "Internal" => false,
+        "Attachable" => attachable,
         "Options" => {
           "com.docker.network.driver.overlay.vxlanid_list" => (max_vxlanid + 1).to_s
         },
