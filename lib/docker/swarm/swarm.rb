@@ -156,6 +156,8 @@ class Docker::Swarm::Swarm
     # Sometimes nodes have leftover networks not on other nodes, that have subnets that can't be duplicated in
     # the new overlay network.
     nodes.each do |node|
+      next unless node.hash['Status']['State'] == 'ready'
+
       node.networks.each do |network|
         if (network.driver == 'overlay')
           if (network.hash['Options'])
