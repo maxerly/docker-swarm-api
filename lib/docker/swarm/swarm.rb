@@ -90,17 +90,18 @@ class Docker::Swarm::Swarm
     end
   end
 
-  def tasks
+  def tasks(query = {})
     items = []
-    query = {}
     opts = {}
     resp = self.connection.get('/tasks', query, :body => opts.to_json)
     hashes = JSON.parse(resp)
-    items = []
     hashes.each do |hash|
       items << Swarm::Task.new(self, hash)
     end
     return items
+  # Rescue case where no tasks could be found (API returns 404)
+  rescue Excon::Error::NotFound
+    return []
   end
 
   def leave(node, force = false)

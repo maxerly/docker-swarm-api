@@ -91,6 +91,10 @@ worker_node.drain()
  # Gather all tasks (containers for service) being hosted by the swarm cluster
 tasks = swarm.tasks()
 
+ # Use filters in query to gather all tasks of a specific service
+ # See https://docs.docker.com/engine/api/v1.40/#operation/TaskList for a list of available filters
+myservice_tasks = swarm.tasks("filters={\"service\":{\"myservice\":true}}")
+
  # Scale up or down the number of replicas on a service
 service.scale(20)
 
